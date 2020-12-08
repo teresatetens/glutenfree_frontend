@@ -12,7 +12,7 @@ const App = () => {
     let proxy;
 
     if (process.env.NODE_ENV === 'production') {
-      proxy = 'https://gluten-free-api.herokuapp.com/'
+      proxy = 'https://gluten-free-api.herokuapp.com'
     } else {
       proxy = 'http://localhost:3000'
     }
@@ -21,7 +21,7 @@ const App = () => {
 
 
     useEffect(() => {
-        fetch(`${proxy}/user/${hardcodedUser}`)
+        fetch(`${proxy}/api/user/${hardcodedUser}`)
         // Get the information from Clara
         // set it inside userData
         .then((response) => response.json())
@@ -31,7 +31,7 @@ const App = () => {
         .catch(error=> console.error('Error:', error))
     }, [])
     console.log({userData:userData})
-    
+
     return (
         <BrowserRouter>
             <div >

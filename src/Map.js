@@ -95,7 +95,7 @@ const Map = ({userData, setUserData}) => {
   let proxy;
 
   if (process.env.NODE_ENV === 'production') {
-    proxy = 'https://gluten-free-api.herokuapp.com/'
+    proxy = 'https://gluten-free-api.herokuapp.com'
   } else {
     proxy = 'http://localhost:3000'
   }
@@ -172,7 +172,7 @@ const Map = ({userData, setUserData}) => {
   // Fetch glutenfree restaurant from Google Places API  
   // data.results is an Array of 20 objects
   useEffect(() => {
-      fetch(`${proxy}/map`, {
+      fetch(`${proxy}/api/map`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -201,7 +201,7 @@ const Map = ({userData, setUserData}) => {
   // Update User's Watchlist
   const handleAddToWatchList = (selected) => {
     setWatchlist(preWatchList => [...preWatchList, selected] )
-    fetch(`${proxy}/user/watchlist`, {
+    fetch(`${proxy}/api/user/watchlist`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

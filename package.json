@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://gluten-free-api.herokuapp.com/",
+  "proxy": "https://gluten-free-api.herokuapp.com",
   "eslintConfig": {
     "extends": [
       "react-app",
