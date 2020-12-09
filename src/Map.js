@@ -211,6 +211,23 @@ console.log({userData:userData})
     .catch(e => console.error({AddToWatchListError: e.message}))
 }
 
+const handleDeleteWatchList = (google_place_id) => {
+  // setWatchlist([...watchlist, {...selected, google_place_id: selected.place_id}])
+  // setWatchlist(preWatchList => [...preWatchList, selected] )
+  fetch(`${proxy}/user/watchlist`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user: userData._id, google_place_id})
+  })
+  .then((response) => response.json())
+  .then(result => {
+    setUserData(result)
+  })
+  .catch(e => console.error({DeleteWatchListError: e.message}))
+}
+
   if (loadError) return "Error";
   if (!isLoaded) return "Loading...";
 
@@ -316,18 +333,17 @@ console.log({userData:userData})
             <Grid item xs={3} className={classes.listWrapper}>
               <Paper  className={classes.paper2}>
               { myPlaces && 
-                handlePagination(listType === 'mapList' ? myPlaces : userData.watch_list).map((myPlace)=> (
+                handlePagination(listType === 'mapList' ? myPlaces : userData.watch_list).map((myPlace, i)=> (
                   <>
-                    <List component="nav" key = {myPlace.place_id} >
+                    <List component="nav" key={i} >
                       <ListItem>
                         <ListItemAvatar>
-                          <Avatar>
-                          { selected &&  
-                                selected.place_id === myPlace.place_id?
+                          <Avatar onClick={()=> handleDeleteWatchList(listType === 'mapList' ? myPlace.place_id:myPlace.google_place_id)}>
+                          { (listType === 'mapList' && userData.watch_list.find(place => place.google_place_id === myPlace.place_id)) || listType === 'watchList' ?
                               <FavoriteIcon color="secondary"/> 
                             :
                             <FavoriteIcon />                         
-                            } 
+                            }
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText primary={listType === 'mapList' ? myPlace.name : myPlace.place_name} secondary={listType === 'mapList' ? myPlace.vicinity : myPlace.address}/>
