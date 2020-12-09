@@ -106,16 +106,18 @@ console.log({userData:userData})
 
   const [myPlaces, setMyPlaces] = useState(null);    
   const [hideList, setHideList] = useState(true);  // show and hide List beside the map
+  const [listType, setListType] =  useState(null);
 
   const [page, setPage] = useState(1)
 
   // toggle list
-  const handleClick = () => {
+  const handleClick = (userSelectedListType) => {
+    setListType(userSelectedListType)
     setHideList(s => !s);
   };
 
   const [selected, setSelected] = useState(null); 
-  const [watchlist, setWatchlist] = useState(userData && userData.watch_list);
+  const [watchlist, setWatchlist] = useState(null);
 
   console.log({myPlaces: myPlaces})
   console.log({selected: selected})
@@ -193,7 +195,7 @@ console.log({userData:userData})
 
   // Update User's Watchlist
   const handleAddToWatchList = (selected) => {
-    setWatchlist([...watchlist, {...selected, google_place_id: selected.place_id}])
+    // setWatchlist([...watchlist, {...selected, google_place_id: selected.place_id}])
     // setWatchlist(preWatchList => [...preWatchList, selected] )
     fetch(`${proxy}/user/watchlist`, {
       method: 'PUT',
@@ -213,8 +215,8 @@ console.log({userData:userData})
   if (!isLoaded) return "Loading...";
 
   return (
-  // { userData &&
-  <>
+    <>
+  { userData && (
     <div className={classes.root}>
         <Grid container >
             <AppBar position="static" className={classes.appBar}>
@@ -235,24 +237,24 @@ console.log({userData:userData})
                   <Grid>
                           <button
                               className="placeList"
-                              onClick={handleClick}
+                              onClick={() => handleClick("mapList")}
                               style={{outline: 'none'}}
                           >
                               <img src="/magnifier.svg" alt="showPlaceLists" />
                           </button>
                     </Grid>
                 </IconButton>
-                {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                   <Grid item>
                           <button
                               className="myWatchlist"
-                              onClick={handleClick}
+                              onClick={() => handleClick("watchList")}
                               style={{outline: 'none'}}
                           >
                               <img src="/pin.svg" alt="showMyWatchlists" />
                           </button>
                     </Grid>
-                </IconButton> */}
+                </IconButton>
               </Toolbar>
             </AppBar>
           <Grid container className={classes.bodyWrapper}>
@@ -295,9 +297,9 @@ console.log({userData:userData})
                             <h2>{selected.name}</h2>
                             <h4>Address: {selected.vicinity}</h4>
                             <h4> Rating: {selected.rating}</h4>
-                            { watchlist && 
-                              watchlist.find(watchlistPlace => watchlistPlace.google_place_id === selected.place_id)
-                              ? "":( 
+                            { userData.watch_list && 
+                              userData.watch_list.find(watchlistPlace => watchlistPlace.google_place_id === selected.place_id)
+                              ? "" : ( 
                               <button value={selected.place_id} 
                                       onClick ={()=> handleAddToWatchList(selected)}> 
                                 Add to Watchlist
@@ -314,7 +316,7 @@ console.log({userData:userData})
             <Grid item xs={3} className={classes.listWrapper}>
               <Paper  className={classes.paper2}>
               { myPlaces && 
-                handlePagination(myPlaces).map((myPlace)=> (
+                handlePagination(listType === 'mapList' ? myPlaces : userData.watch_list).map((myPlace)=> (
                   <>
                     <List component="nav" key = {myPlace.place_id} >
                       <ListItem>
@@ -328,7 +330,7 @@ console.log({userData:userData})
                             } 
                           </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary={myPlace.name} secondary={myPlace.vicinity}/>
+                        <ListItemText primary={listType === 'mapList' ? myPlace.name : myPlace.place_name} secondary={listType === 'mapList' ? myPlace.vicinity : myPlace.address}/>
                       </ListItem>
                     </List>
                     <Divider />
@@ -342,8 +344,9 @@ console.log({userData:userData})
           </Grid>
         </Grid>
       </div>
-    </>
-      // }
+    
+    )}
+</>
   );
 }
 
