@@ -5,85 +5,78 @@ import "@reach/combobox/styles.css";
 import mapStyles from "./mapStyles";
 import Locate from './Locate';
 import Search from './Search';
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
+import { makeStyles, Paper, Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, AppBar, Toolbar, Typography, Button, IconButton  } from "@material-ui/core";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-// import usePlacesAutocomplete from "use-places-autocomplete";
 import Pagination from '@material-ui/lab/Pagination';
-import PrimarySearchAppBar from './PrimarySearchAppBar';
-
-const libraries = ["places"];
 
 const mapContainerStyle = {
-  height: "100vh",
+  height: "93vh",
   width: "100vw",
 };
+const google = window.google = window.google ? window.google : {}
 
 //Snazzy Blue Essence
 const options = {
   styles: mapStyles,
   disableDefaultUI: true,
   zoomControl: true,
+  // zoomControlOptions: {
+  //   position: google.maps.ControlPosition.LEFT_CENTER,
+  // },
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1
   },
-  // paper1: {
-  //   textAlign: "center",
-  //   color: theme.palette.text.secondary,
-  //   height: "50%",
-  // },
-  paper2: {
-    paddingLeft: theme.spacing(2),
-    color: theme.palette.text.primary,
-    height: "100%",
-    overflow: "scroll"
+  appBar: {
+    background: "#6ECBCF",
+    // background: "transparent",  
   },
-  navbar: {
-    alignItems:"center",
-    justifyItems: "center",
-    background: "transparent",
-    height: "7%",
-    // position: "relative",
-    // right: "0", 
-    zIndex: "10"
-  },
-  bodyWrapper: {
-    height: "93%",
+  title: {
+    flexGrow: 1,
+    width: "40%",
   },
   searchLocate: {
     alignItems:"center",
-    justifyContent: "center",
+    justifyContent: "start",
   },
   listIcons: {
     alignItems:"center",
     justifyContent: "center",
   },
+  paper2: {
+    paddingLeft: theme.spacing(1),
+    color: theme.palette.text.primary,
+    height: "100%",
+    overflow: "auto"
+  },
   mapWrapper:{
-    // position: "absolute",
     left: "0",
-    // height: "70%",
   },
   listWrapper:{
-    // position: "absolute",
+    position: "absolute",
     right: "0",
-    height: "100%",
-  }
-
+    height: "93vh",
+  },
+  placeList: {
+    top: "1rem",
+    right: "4rem",
+    background:" none",
+    border: "none",
+    zIndex: 10,
+  },
+  listButton: {
+    width: "30px",
+    cursor: "pointer",
+  },
 }));
 
 const ListItemLink = (props) => {
   return <ListItem button component="a" {...props} />;
 }
+
+const libraries = ["places"];
 
 const Map = ({userData, setUserData}) => {
   const classes = useStyles();
@@ -93,13 +86,13 @@ const Map = ({userData, setUserData}) => {
   });
 
   let proxy;
-
   if (process.env.NODE_ENV === 'production') {
     proxy = 'https://gluten-free-api.herokuapp.com'
   } else {
     proxy = 'http://localhost:3000'
   }
 
+console.log({userData:userData})
 
   const apiKey = process.env.REACT_APP_IPIFY_API_KEY
   const myIpUrl = `https://geo.ipify.org/api/v1?apiKey=${apiKey}`
@@ -172,7 +165,7 @@ const Map = ({userData, setUserData}) => {
   // Fetch glutenfree restaurant from Google Places API  
   // data.results is an Array of 20 objects
   useEffect(() => {
-      fetch(`${proxy}/api/map`, {
+      fetch(`${proxy}/map`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -200,8 +193,9 @@ const Map = ({userData, setUserData}) => {
 
   // Update User's Watchlist
   const handleAddToWatchList = (selected) => {
-    setWatchlist(preWatchList => [...preWatchList, selected] )
-    fetch(`${proxy}/api/user/watchlist`, {
+    setWatchlist([...watchlist, {...selected, google_place_id: selected.place_id}])
+    // setWatchlist(preWatchList => [...preWatchList, selected] )
+    fetch(`${proxy}/user/watchlist`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -223,25 +217,22 @@ const Map = ({userData, setUserData}) => {
   <>
     <div className={classes.root}>
         <Grid container >
-            <Grid item xs={12} container className={classes.navbar} >
-                <Grid item xs={4}>
-                    <h1>
-                        Gluten Free Finder{" "}
+            <AppBar position="static" className={classes.appBar}>
+              <Toolbar>
+                <Typography variant="h5" className={classes.title}>
+                  Gluten Free Finder{" "}
                         <span role="img" aria-label="check">
                           🔎
                         </span>
-                    </h1>
-                </Grid>
-                <Grid item xs={6} container className={classes.searchLocate}>
-                  <Grid item xs={12}>
+                </Typography>
+                <Grid item container className={classes.searchLocate}>
                     <Search panTo={panTo} onCenter={setCenter} />
-                  </Grid>
                 </Grid>
-                <Grid item xs={2} container className={classes.listIcons}>
-                  <Grid item xs={4}>
-                          <Locate panTo={panTo} onCenter={setCenter}/> 
-                  </Grid>
-                    <Grid item xs={4}>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <Locate panTo={panTo} onCenter={setCenter}/>
+                </IconButton>
+                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <Grid>
                           <button
                               className="placeList"
                               onClick={handleClick}
@@ -250,7 +241,9 @@ const Map = ({userData, setUserData}) => {
                               <img src="/magnifier.svg" alt="showPlaceLists" />
                           </button>
                     </Grid>
-                    <Grid item xs={4}>
+                </IconButton>
+                {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <Grid item>
                           <button
                               className="myWatchlist"
                               onClick={handleClick}
@@ -259,11 +252,11 @@ const Map = ({userData, setUserData}) => {
                               <img src="/pin.svg" alt="showMyWatchlists" />
                           </button>
                     </Grid>
-                </Grid>
-            </Grid>
-          <Grid item xs ={12} container className={classes.bodyWrapper}>
-            <Grid item xs={hideList ? 12 : 9} style={{position: "absolute",  left: "0"}} className={classes.mapWrapper}>
-              {/* <Paper className={classes.paper1} elevation = {3} > */}
+                </IconButton> */}
+              </Toolbar>
+            </AppBar>
+          <Grid container className={classes.bodyWrapper}>
+            <Grid item xs={hideList ? 12 : 12} style={{position: "absolute", left: "0"}} className={classes.mapWrapper}>
                 <Grid item xs = {12} container >            
                     <GoogleMap
                       id="map"
@@ -275,9 +268,11 @@ const Map = ({userData, setUserData}) => {
                       >
                       <Circle 
                           center={center}
-                          radius={1000}
+                          radius={500}
                           options={{
-                            strokeColor: "transparent"
+                            strokeColor: "transparent",
+                            fillColor: "#FF0000",
+                            fillOpacity: 0.35,
                             }}
                             /> 
                       { myPlaces && 
@@ -285,8 +280,6 @@ const Map = ({userData, setUserData}) => {
                         <Marker 
                           key = {myPlace.place_id} 
                           position = {{ lat: myPlace.geometry.location.lat, lng: myPlace.geometry.location.lng }} 
-                          // icon = {myIcon}
-                          // animation = {Animation.DROP}
                           onClick ={()=> setSelected(myPlace)}
                         />
                         )}
@@ -302,23 +295,23 @@ const Map = ({userData, setUserData}) => {
                             <h2>{selected.name}</h2>
                             <h4>Address: {selected.vicinity}</h4>
                             <h4> Rating: {selected.rating}</h4>
-                            {watchlist.filter(onePlace => onePlace.google_place_id === selected.place_id)
-                                      .length === 0 ? (
+                            { watchlist && 
+                              watchlist.find(watchlistPlace => watchlistPlace.google_place_id === selected.place_id)
+                              ? "":( 
                               <button value={selected.place_id} 
                                       onClick ={()=> handleAddToWatchList(selected)}> 
                                 Add to Watchlist
                               </button>
-                            ):
-                            "" }
+                              )
+                            }
                           </div>
                         </InfoWindow>
                       ) :  null }
                     </GoogleMap>
                 </Grid>
-              {/* </Paper> */}
             </Grid>
           {!hideList && (
-            <Grid item xs={3} style={{position: "absolute", right: "0"}} className={classes.listWrapper}>
+            <Grid item xs={3} className={classes.listWrapper}>
               <Paper  className={classes.paper2}>
               { myPlaces && 
                 handlePagination(myPlaces).map((myPlace)=> (

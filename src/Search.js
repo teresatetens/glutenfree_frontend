@@ -38,17 +38,17 @@ const Search = ({panTo, onCenter}) => {
         };
     
         return (
-        <div className="search">
+        <div className="search" style = {{zIndex: 10}}>
             <Combobox onSelect={handleSelect} >
                 <ComboboxInput
                     value={value}
                     onChange={handleInput}
                     disabled={!ready}
                     placeholder="Your Destination"
-                    style={{border:'1px solid #4fbac0', outline:'none', zIndex:100 }}
+                    style={{border:'1px solid #4fbac0', outline:'none', zIndex:1 }}
                 />
-                <ComboboxPopover>
-                    <ComboboxList>
+                <ComboboxPopover style = {{top:65, outline:'none'}}>
+                    <ComboboxList style={{outline:'none', zIndex:1 }}>
                     {status === "OK" &&
                         data.map(({ id, description }) => (
                         <ComboboxOption key={id} value={description} />

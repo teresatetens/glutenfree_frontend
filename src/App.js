@@ -19,9 +19,8 @@ const App = () => {
   
     const [userData, setUserData] = useState(null)
 
-
     useEffect(() => {
-        fetch(`${proxy}/api/user/${hardcodedUser}`)
+        fetch(`${proxy}/user/${hardcodedUser}`)
         // Get the information from Clara
         // set it inside userData
         .then((response) => response.json())

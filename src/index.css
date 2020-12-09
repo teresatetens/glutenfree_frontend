@@ -6,11 +6,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 18px;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+#map {
+  height: 93vh;
 }
 
 h1 {
@@ -24,13 +28,10 @@ h1 {
 }
 
 .search {
-  /* position: absolute; */
   top: 1rem;
-  /* left: 50%;
-  transform: translateX(-50%); */ 
   width: 100%;
   max-width: 400px;
-  z-index: 1;
+  z-index: 100;
 }
 
 .search input {

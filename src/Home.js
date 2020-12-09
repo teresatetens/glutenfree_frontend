@@ -37,13 +37,13 @@ const Home = () => {
       ))}
         <div className="linkButton">
           <button style={{border:'none'}}>
-            <Link to={'/map'} style={{ textDecoration: 'none', color:"white" }}>
+            <Link to={'/map'} style={{ textDecoration: 'none', color:"transparent" }}>
               like to explore?</Link>
           </button>
         </div>
         <div className="linkButton">
           <button style={{border:'none'}}>
-            <Link to={'/user/:id'} style={{ textDecoration: 'none', color:"white" }}>
+            <Link to={'/user/:id'} style={{ textDecoration: 'none', color:"transparent" }}>
               go to my watchlist</Link>
           </button>
         </div>
