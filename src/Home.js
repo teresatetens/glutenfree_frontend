@@ -29,26 +29,15 @@ const Home = () => {
   useEffect(() => void reset(), [])
 
   return (
+    <Link to={'/map'} style={{ textDecoration: 'none', color:"transparent" }}>
     <div className="landing">
       {transitions.map(({ item, props: { innerHeight, ...rest }, key }) => (
-        <animated.div className="transitions-item" key={key} style={rest} onClick={reset}>
+        <animated.div className="transitions-item" key={key} style={rest} >
           <animated.div style={{ overflow: 'hidden', height: innerHeight }}>{item}</animated.div>
         </animated.div>
       ))}
-        <div className="linkButton">
-          <button style={{border:'none'}}>
-            <Link to={'/map'} style={{ textDecoration: 'none', color:"transparent" }}>
-              like to explore?</Link>
-          </button>
-        </div>
-        <div className="linkButton">
-          <button style={{border:'none'}}>
-            <Link to={'/user/:id'} style={{ textDecoration: 'none', color:"transparent" }}>
-              go to my watchlist</Link>
-          </button>
-        </div>
     </div>
-   
+    </Link>   
   )
 }
 export default Home

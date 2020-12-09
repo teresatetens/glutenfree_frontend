@@ -7,6 +7,7 @@ import Locate from './Locate';
 import Search from './Search';
 import { makeStyles, Paper, Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, AppBar, Toolbar, Typography, Button, IconButton  } from "@material-ui/core";
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import HomeIcon from '@material-ui/icons/Home';
 import Pagination from '@material-ui/lab/Pagination';
 
 const mapContainerStyle = {
