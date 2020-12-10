@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { GoogleMap,  useLoadScript,  Marker,  InfoWindow, Circle } from "@react-google-maps/api";
+import { Link } from 'react-router-dom'
 import axios from "axios";
 import "@reach/combobox/styles.css";
 import mapStyles from "./mapStyles";
@@ -9,6 +10,7 @@ import { makeStyles, Paper, Grid, List, ListItem, ListItemText, ListItemAvatar, 
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import HomeIcon from '@material-ui/icons/Home';
 import Pagination from '@material-ui/lab/Pagination';
+import PageviewIcon from '@material-ui/icons/Pageview';
 
 const mapContainerStyle = {
   height: "93vh",
@@ -239,6 +241,11 @@ const handleDeleteWatchList = (google_place_id) => {
         <Grid container >
             <AppBar position="static" className={classes.appBar}>
               <Toolbar>
+                <Link to={'/'} style={{ color:"white" }}>
+                  <IconButton edge="start" color="inherit" aria-label="menu">
+                    <PageviewIcon />
+                  </IconButton>
+                </Link>
                 <Typography variant="h5" className={classes.title}>
                   Gluten Free Finder{" "}
                         <span role="img" aria-label="check">

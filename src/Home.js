@@ -21,9 +21,9 @@ const Home = () => {
     ref.current.map(clearTimeout)
     ref.current = []
     set([])
-    ref.current.push(setTimeout(() => set(['Travel', 'Gluten', 'Free']), 2000))
+    ref.current.push(setTimeout(() => set(['Travel', 'Gluten', 'Free']), 4000))
     ref.current.push(setTimeout(() => set(['Gluten', 'Free']), 5000))
-    ref.current.push(setTimeout(() => set(['Find me', 'Gluten', 'Free']), 8000))
+    ref.current.push(setTimeout(() => set(['Find me', 'Gluten', 'Free']), 9000))
   }, [])
 
   useEffect(() => void reset(), [])
